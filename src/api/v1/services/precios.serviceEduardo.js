@@ -45,3 +45,17 @@ export const getPreciosByIdListaOK = async (idListaOK) => {
     throw new Error('Error al obtener los precios: ' + error.message);
   }
 };
+
+
+
+// Servicio para eliminar una lista de precios por idListaOK
+exports.deleteListaPrecios = async (idListaOK) => {
+  try {
+    // Usamos el modelo para buscar y eliminar la lista
+    const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
+
+    return result; // Retornamos el resultado (o null si no se encontró)
+  } catch (error) {
+    throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
+  }
+};

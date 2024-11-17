@@ -3,7 +3,7 @@ import { Router } from 'express';
 import config from '../../../config/config';
 
 // Importación de rutas de precios
-import preciosRoutes from './precios.routes';
+import preciosRoutes from './precios.routesEduardo';
 
 const routerAPI = (app) => {
   const router = Router();

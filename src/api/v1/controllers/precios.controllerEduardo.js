@@ -1,8 +1,8 @@
-import * as preciosServices from '../services/precios.service';
+import * as preciosServices from '../services/precios.serviceEduardo';
 
 //MALR: API GET
 // controllers/precio.controller.js
-const precioService = require('../services/precios.service');
+const precioService = require('../services/precios.serviceEduardo');
 const boom = require('@hapi/boom');
 
 exports.getAllPrecios = async (req, res, next) => {
@@ -36,5 +36,29 @@ exports.getPreciosByIdListaOK = async (req, res, next) => {
   } catch (error) {
     // Pasamos cualquier error al middleware de manejo de errores
     next(error);
+  }
+};
+
+
+
+//api para deletr la lista completa seleccionada
+// Controlador para eliminar una lista de precios por idListaOK
+exports.deleteListaPrecios = async (req, res, next) => {
+  try {
+    const { idListaOK } = req.params; // Obtenemos el idListaOK de los parámetros de la ruta
+
+    // Llamamos al servicio para eliminar la lista
+    const result = await precioService.deleteListaPrecios(idListaOK);
+
+    if (!result) {
+      throw boom.notFound(`No se encontró la lista de precios con idListaOK: ${idListaOK}`);
+    }
+
+    res.status(200).json({
+      message: `Lista de precios con idListaOK: ${idListaOK} eliminada correctamente`,
+      result,
+    });
+  } catch (error) {
+    next(error); // Pasa el error al middleware de manejo de errores
   }
 };
