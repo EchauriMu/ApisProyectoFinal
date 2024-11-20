@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Definir el esquema de precios
+// Definir el esquema de registros de detalle
 const detailRowRegSchema = new Schema({
   FechaReg: {
     type: Date,
@@ -11,7 +11,7 @@ const detailRowRegSchema = new Schema({
     type: String,
     required: true
   }
-},{ _id: false });
+});
 
 const detailRowSchema = new Schema({
   Activo: {
@@ -25,7 +25,7 @@ const detailRowSchema = new Schema({
     default: 'N'
   },
   detail_row_reg: [detailRowRegSchema]
-},{ _id: false });
+});
 
 const precioSchema = new Schema({
   IdProdServOK: {
@@ -57,7 +57,7 @@ const precioSchema = new Schema({
     required: true
   },
   detail_row: detailRowSchema
-},{ _id: false });
+});
 
 const promocionSchema = new Schema({
   _id: {
@@ -88,7 +88,7 @@ const promocionSchema = new Schema({
     required: true
   },
   detail_row_reg: [detailRowRegSchema]
-},{ _id: false });
+});
 
 const alertaSchema = new Schema({
   _id: {
@@ -118,10 +118,10 @@ const alertaSchema = new Schema({
     required: true
   },
   detail_row_reg: [detailRowRegSchema]
-},{ _id: false });
+});
 
 const historialItem = new Schema({
-  Id:{
+  Id: {
     type: String,
     default: ''
   },
@@ -146,7 +146,7 @@ const historialItem = new Schema({
     required: true
   },
   detail_row: detailRowSchema
-},{ _id: false });
+});
 
 const historialSchema = new Schema({
   IdProdServOK: {
@@ -156,11 +156,11 @@ const historialSchema = new Schema({
   IdPresentaOK: {
     type: String,
     required: true
-  },historial:[historialItem]
-},{ _id: false });
+  },
+  historial: [historialItem]
+});
 
 const listaPreciosSchema = new Schema({
-  
   IdInstitutoOK: {
     type: String,
     required: true
@@ -211,7 +211,7 @@ const listaPreciosSchema = new Schema({
   promociones: [promocionSchema],
   alertas: [alertaSchema],
   historial: [historialSchema]
-},{ _id: false });
+});
 
-//   module.exports = mongoose.model('ListaPrecios', listaPreciosSchema);
-module.exports = mongoose.model('cat_precios',   listaPreciosSchema, 'cat_precios');
+// Exportar el modelo con su nombre 'cat_precios' y la colección 'cat_precios'
+module.exports = mongoose.model('cat_precios', listaPreciosSchema, 'cat_precios');

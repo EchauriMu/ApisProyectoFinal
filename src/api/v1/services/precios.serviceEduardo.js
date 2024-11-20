@@ -1,5 +1,4 @@
 import Precios from '../models/Precios';
-import precios from '../models/Precios';
 
 // services/precio.service.js
 const Precio = require('../models/Precios'); // Asegúrate de que el modelo esté correcto
@@ -57,5 +56,21 @@ exports.deleteListaPrecios = async (idListaOK) => {
     return result; // Retornamos el resultado (o null si no se encontró)
   } catch (error) {
     throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
+  }
+};
+
+
+// Función para crear una nueva lista de precios
+exports.createListaPrecios = async (datosLista) => {
+  try {
+    // Crear una nueva instancia del modelo Precios con los datos proporcionados
+    const nuevaLista = new Precios(datosLista);
+
+    // Guardar la nueva lista de precios en la base de datos
+    await nuevaLista.save();
+    
+    return nuevaLista; // Devolvemos la lista de precios recién creada
+  } catch (error) {
+    throw new Error('Error al crear la lista de precios: ' + error.message);
   }
 };

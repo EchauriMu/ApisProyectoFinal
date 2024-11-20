@@ -13,5 +13,9 @@ router.get('/:idListaOK', precioController.getPreciosByIdListaOK);
 // Ruta para eliminar una lista de precios por idListaOK
 router.delete('/:idListaOK', precioController.deleteListaPrecios);
 
+//crear llista completa nueva
+// Ruta para crear lista de precios
+router.post('/crear', precioController.createListaPrecios);
+
 
 module.exports = router;
