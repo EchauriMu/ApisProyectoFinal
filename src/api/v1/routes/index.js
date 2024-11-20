@@ -7,6 +7,7 @@ import preciosRoutes from './precios.routesEduardo';
 import preciosRoutesMiguel from './precios.routesMiguel'
 import alertasRoutes from './alertas.routesGERA';
 import preciosHistorial from './historial.routesCARLOS.js';
+import promocionesRoutesSebas from './promociones.routesSebas';
 
 const routerAPI = (app) => {
   const router = Router();
@@ -28,6 +29,9 @@ const routerAPI = (app) => {
  router.use('/historial', preciosHistorial); //RUTAS DE CARLOS
 
 
+
+ //definir rutas para las pais de sebas
+   router.use('/listas-precios', promocionesRoutesSebas);  // Ruta de promociones
 
 
   return router;

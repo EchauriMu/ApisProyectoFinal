@@ -1,6 +1,4 @@
-import * as preciosServices from '../services/precios.serviceEduardo';
 
-//MALR: API GET
 // controllers/precio.controller.js
 const precioService = require('../services/precios.serviceEduardo');
 const boom = require('@hapi/boom');

@@ -27,7 +27,7 @@ app.get(`${api}`, (req,res)=>{
         `<h1>RESTful running in root</h1> <p> eCommerce: <b>${api}/api-docs</b> for more information.</p>`
     );
 })
-app.get('/MALR', (req,res)=>{
+app.get('/EDU', (req,res)=>{
     res.send(
         `<h1>RESTful running in MALR</h1> <p> eCommerce: <b>${api}/api-docs</b> for more information.</p>`
     );

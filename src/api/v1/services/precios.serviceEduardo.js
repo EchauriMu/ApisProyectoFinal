@@ -3,9 +3,9 @@ import Precios from '../models/Precios';
 // services/precio.service.js
 const Precio = require('../models/Precios'); // Asegúrate de que el modelo esté correcto
 
-exports.getAllPrecios = async () => {
+export const getAllPrecios = async () => {
   try {
-    // Encontrar todos los documentos y proyectar solo los campos que necesitas
+    // Encontrar todos los documentos y muestro los campos que queremos
     const precios = await Precio.find({}, {
       IdInstitutoOK: 1,
       IdListaOK: 1,
@@ -48,7 +48,7 @@ export const getPreciosByIdListaOK = async (idListaOK) => {
 
 
 // Servicio para eliminar una lista de precios por idListaOK
-exports.deleteListaPrecios = async (idListaOK) => {
+export const deleteListaPrecios = async (idListaOK) => {
   try {
     // Usamos el modelo para buscar y eliminar la lista
     const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
@@ -61,7 +61,7 @@ exports.deleteListaPrecios = async (idListaOK) => {
 
 
 // Función para crear una nueva lista de precios
-exports.createListaPrecios = async (datosLista) => {
+export const createListaPrecios = async (datosLista) => {
   try {
     // Crear una nueva instancia del modelo Precios con los datos proporcionados
     const nuevaLista = new Precios(datosLista);
