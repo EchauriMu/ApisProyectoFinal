@@ -46,3 +46,23 @@ export const putAlertasItem = async (req, res, next) => {
     next(error);
   }
 };
+
+// Controlador para eliminar una alerta
+export const eliminarAlerta = async (req, res) => {
+  try {
+    const { id, idAlerta } = req.params; // Extraemos los parámetros de la URL
+
+    const resultado = await preciosServices.eliminarAlerta(id, idAlerta);
+
+    if (!resultado) {
+      return res.status(404).json({
+        message: `No se encontró la lista con IdListaOK: ${id} o la alerta con _id: ${idAlerta}.`
+      });
+    }
+
+    res.status(200).json({ message: 'Alerta eliminada exitosamente.' });
+  } catch (error) {
+    console.error('Error al eliminar la alerta:', error);
+    res.status(500).json({ message: 'Error al eliminar la alerta.', error });
+  }
+};

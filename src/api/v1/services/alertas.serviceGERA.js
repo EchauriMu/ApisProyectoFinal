@@ -65,3 +65,19 @@ export const putAlertasItem = async (id, alertaId, alertaData) => {
     throw boom.internal(error);
   }
 };
+
+// Servicio para eliminar una alerta por IdListaOK e idAlerta
+export const eliminarAlerta = async (idLista, idAlerta) => {
+  try {
+    const listaActualizada = await Precios.findOneAndUpdate(
+      { IdListaOK: idLista }, // Filtra por IdListaOK
+      { $pull: { alertas: { _id: idAlerta } } }, // Elimina la alerta específica
+      { new: true } // Devuelve la lista actualizada
+    );
+
+    return listaActualizada;
+  } catch (error) {
+    console.error('Error al eliminar la alerta:', error);
+    throw error;
+  }
+};

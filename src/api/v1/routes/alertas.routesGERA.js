@@ -11,5 +11,7 @@ router.post('/:id/alertas', preciosController.postAlertaItem);
 router.post('/:id/alertas-lista', preciosController.postAlertasList);
 //PUT ALERTA ITEM
 router.put('/:id/alertas/:alertaId', preciosController.putAlertasItem);
+//DELETE ALERTA ITEM
+router.delete('/:id/alertas/:idAlerta', preciosController.eliminarAlerta);
 
 export default router;
