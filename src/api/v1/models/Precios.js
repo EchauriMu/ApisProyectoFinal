@@ -160,6 +160,41 @@ const historialSchema = new Schema({
   historial: [historialItem]
 });
 
+// Esquema para las notas Juan
+const notaSchema = new Schema({
+  _id: {
+    type: String,
+    required: true
+  },
+  Usuario: {
+    type: String,
+    required: true
+  },
+  Fecha: {
+    type: Date,
+    required: true
+  },
+  Comentario: {
+    type: String,
+    required: true
+  },
+  Categoria: {
+    type: String,
+    required: true
+  },
+  Prioridad: {
+    type: String,
+    enum: ['Alta', 'Media', 'Baja'],
+    required: true
+  },
+  Estado: {
+    type: String,
+    enum: ['Pendiente', 'En proceso', 'Resuelto'],
+    required: true
+  },
+  detail_row: detailRowSchema
+});
+
 const listaPreciosSchema = new Schema({
   IdInstitutoOK: {
     type: String,
@@ -198,11 +233,6 @@ const listaPreciosSchema = new Schema({
     default: ''
   },
   precios: [precioSchema],
-  roles: {
-    type: [String],
-    enum: ['admin', 'gestor_precios', 'usuario'],
-    default: []
-  },
   detail_row: detailRowSchema,
   negocios: {
     type: [String],
@@ -210,7 +240,8 @@ const listaPreciosSchema = new Schema({
   },
   promociones: [promocionSchema],
   alertas: [alertaSchema],
-  historial: [historialSchema]
+  historial: [historialSchema],
+  notas: [notaSchema]
 });
 
 // Exportar el modelo con su nombre 'cat_precios' y la colección 'cat_precios'
