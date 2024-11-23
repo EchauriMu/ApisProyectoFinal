@@ -1,6 +1,6 @@
 import Precios from '../models/Precios';
 
-// services/precio.service.js
+// services/precio.serviceEdu.js
 const Precio = require('../models/Precios'); // Asegúrate de que el modelo esté correcto
 
 export const getAllPrecios = async () => {

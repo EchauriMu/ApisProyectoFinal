@@ -15,8 +15,11 @@ const routerAPI = (app) => {
   const api = config.API_URL;  // Obtener la URL base desde la configuración
   app.use(api, router);  // Aplicar el prefijo base a todas las rutas
 
-  // Definir las rutas
+  // Definir las rutas de lista de edu ;V
+
   router.use('/listas-precios', preciosRoutes);  // Ruta de precios DE EDUARDO
+
+  //miguel
   router.use('/listas-precios', preciosRoutesMiguel);  // Ruta de precios DE MIGUEL
  
 
@@ -34,7 +37,7 @@ const routerAPI = (app) => {
  //definir rutas para las pais de sebas
    router.use('/listas-precios', promocionesRoutesSebas);  // Ruta de promociones
 
-  //rutas de notas
+  //rutas de notas del juan hola :v
   router.use('/listas-precios', notasRoutes);
   return router;
 

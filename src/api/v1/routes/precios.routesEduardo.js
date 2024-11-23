@@ -1,4 +1,4 @@
-// routes/precio.routes.js
+// routes/precio.routesEdu.js
 const { Router } = require('express');
 const precioController = require('../controllers/precios.controllerEduardo');
 const router = Router();
