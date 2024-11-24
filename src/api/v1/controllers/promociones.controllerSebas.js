@@ -1,110 +1,80 @@
-const cat_precios = require('../models/Precios'); // Asegúrate de la ruta correcta
+import ListaPrecios from '../models/Precios'; // Usamos el modelo correcto
 
-// Obtener promociones por IdListaOK
-exports.getPromociones = async (req, res) => {
-  try {
-    const { id } = req.params; // IdListaOK
-
-    // Buscamos la lista de precios por IdListaOK
-    const listaPrecio = await cat_precios.findOne({
-      IdListaOK: id
+// Obtener promociones de una lista de precios por IdListaOK
+export const getPromocionesList = async (IdListaOK) => {
+    // Buscar la lista de precios por IdListaOK
+    const listaPrecios = await ListaPrecios.findOne({
+        IdListaOK: IdListaOK
     });
-
-    if (!listaPrecio) {
-      return res.status(404).send({ message: 'Lista de precios no encontrada' });
-    }
-
-    res.status(200).send(listaPrecio.promociones);
-  } catch (error) {
-    res.status(500).send({ message: 'Error interno del servidor', error });
-  }
-};
-
-// Obtener promociones por IdListaOK y FechaReg
-exports.getPromocionesFecha = async (req, res) => {
-  try {
-    const { id } = req.params; // IdListaOK
-    const { FechaReg } = req.query; // Recibimos FechaReg como parámetro opcional en el query
-
-    // Buscamos la lista de precios por IdListaOK
-    const listaPrecio = await cat_precios.findOne({
-      IdListaOK: id,
-      'detail_row.detail_row_reg.FechaReg': new Date(FechaReg) // Filtramos también por FechaReg
-    });
-
-    if (!listaPrecio) {
-      return res.status(404).send({ message: 'Lista de precios no encontrada' });
-    }
-
-    res.status(200).send(listaPrecio.promociones);
-  } catch (error) {
-    res.status(500).send({ message: 'Error interno del servidor', error });
-  }
-};
-
-// Crear una nueva promoción por IdListaOK
-exports.postPromocion = async (req, res) => {
-  try {
-    const { id } = req.params; // IdListaOK
-    const { tipo, descuento, condicion } = req.body;
-
-    // Buscamos la lista de precios por IdListaOK
-    const listaPrecio = await cat_precios.findOne({ IdListaOK: id });
-    if (!listaPrecio) {
-      return res.status(404).send({ message: 'Lista de promociones no encontrada' });
-    }
-
-    // Obtener el ID máximo de las promociones existentes
-    const promociones = listaPrecio.promociones;
-
-    // Calcular el ID máximo solo si hay promociones
-    const maxId = promociones.length > 0 
-      ? Math.max(...promociones.map(promo => parseInt(promo._id) || 0)) // Aseguramos que el valor sea un número
-      : 0;
     
-    const nuevaPromocion = {
-      _id: (maxId + 1).toString(), // Crear un nuevo ID basado en el máximo encontrado
-      Activo: 'S',
-      tipo,
-      descuento,
-      condicion,
-      detail_row_reg: [{ FechaReg: new Date(), UsuarioReg: 'Sistema' }]
-    };
-
-    listaPrecio.promociones.push(nuevaPromocion);
-    await listaPrecio.save();
-    res.status(201).send(nuevaPromocion);
-  } catch (error) {
-    res.status(500).send({ message: 'Error interno del servidor', error });
-  }
+    if (!listaPrecios) {
+        throw new Error('Lista de promociones no encontrada');
+    }
+    
+    return listaPrecios.promociones; // Retorna el array de promociones
 };
 
-// Modificar una promoción existente por IdListaOK y idPromocion
-exports.putPromocion = async (req, res) => {
-  try {
-    const { id, idPromocion } = req.params; // IdListaOK y id de la promoción
-    const { tipo, descuento, condicion } = req.body;
+// Crear nuevas promociones para una lista de precios
+export const postPromocion = async (IdListaOK, promocionData) => {
+    // Buscar la lista de precios por IdListaOK
+    const listaPrecios = await ListaPrecios.findOne({
+        IdListaOK: IdListaOK
+    });
 
-    // Buscamos la lista de precios por IdListaOK
-    const listaPrecio = await cat_precios.findOne({ IdListaOK: id });
-    if (!listaPrecio) {
-      return res.status(404).send({ message: 'Lista de promociones no encontrada' });
+    if (!listaPrecios) {
+        throw new Error('Lista de promociones no encontrada');
+    }
+    
+    // Añadir la nueva promoción al array de promociones
+    listaPrecios.promociones.push(promocionData);
+
+    // Guardar los cambios
+    return await listaPrecios.save();
+};
+
+// Modificar promociones existentes en una lista de precios
+export const putPromocion = async (IdListaOK, idPromocion, promocionData) => {
+    // Buscar la lista de precios por IdListaOK
+    const listaPrecios = await ListaPrecios.findOne({
+        IdListaOK: IdListaOK
+    });
+
+    if (!listaPrecios) {
+        throw new Error('Lista de promociones no encontrada');
     }
 
-    // Buscamos la promoción dentro de la lista de precios
-    const promocion = listaPrecio.promociones.id(idPromocion);
+    // Buscar la promoción específica por su _id dentro del array de promociones
+    const promocion = listaPrecios.promociones.id(idPromocion);
+    
     if (!promocion) {
-      return res.status(404).send({ message: 'Promoción no encontrada' });
+        throw new Error('Promoción no encontrada');
+    }
+    
+    // Actualizar los campos de la promoción
+    promocion.set(promocionData);
+
+    // Guardar los cambios
+    return await listaPrecios.save();
+};
+
+// Eliminar una promoción específica de una lista de precios
+export const deletePromocion = async (IdListaOK, idPromocion) => {
+    // Buscar la lista de precios por IdListaOK
+    const listaPrecios = await ListaPrecios.findOne({ IdListaOK: IdListaOK });
+
+    if (!listaPrecios) {
+        throw new Error('Lista de precios no encontrada');
     }
 
-    // Actualizamos los campos de la promoción
-    promocion.tipo = tipo || promocion.tipo;
-    promocion.descuento = descuento || promocion.descuento;
-    promocion.condicion = condicion || promocion.condicion;
+    // Encontrar la promoción específica por su _id
+    const promocion = listaPrecios.promociones.id(idPromocion);
+    if (!promocion) {
+        throw new Error('Promoción no encontrada');
+    }
 
-    await listaPrecio.save();
-    res.status(200).send(promocion);
-  } catch (error) {
-    res.status(500).send({ message: 'Error interno del servidor', error });
-  }
+    // Eliminar la promoción del array
+    promocion.remove();
+
+    // Guardar los cambios
+    return await listaPrecios.save();
 };
