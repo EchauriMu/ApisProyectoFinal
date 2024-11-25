@@ -14,27 +14,11 @@ export const getPromocionesList = async (IdListaOK) => {
     return listaPrecios.promociones; // Retorna el array de promociones
 };
 
-// Obtener promociones de una lista de precios por IdListaOK y FechaReg
-export const getPromocionesListDate = async (IdListaOK, FechaReg) => {
-    // Buscar la lista de precios por IdListaOK y FechaReg
-    const listaPrecios = await ListaPrecios.findOne({
-        IdListaOK: IdListaOK,
-        'detail_row.detail_row_reg.FechaReg': new Date(FechaReg)
-    });
-    
-    if (!listaPrecios) {
-        throw new Error('Lista de promociones no encontrada');
-    }
-    
-    return listaPrecios.promociones; // Retorna el array de promociones
-};
-
 // Crear nuevas promociones para una lista de precios
-export const postPromocion = async (IdListaOK, FechaReg, promocionData) => {
-    // Buscar la lista de precios por IdListaOK y FechaReg
+export const postPromocion = async (IdListaOK, promocionData) => {
+    // Buscar la lista de precios por IdListaOK
     const listaPrecios = await ListaPrecios.findOne({
-        IdListaOK: IdListaOK,
-        'detail_row.detail_row_reg.FechaReg': new Date(FechaReg)
+        IdListaOK: IdListaOK
     });
 
     if (!listaPrecios) {
@@ -49,11 +33,10 @@ export const postPromocion = async (IdListaOK, FechaReg, promocionData) => {
 };
 
 // Modificar promociones existentes en una lista de precios
-export const putPromocion = async (IdListaOK, FechaReg, idPromocion, promocionData) => {
-    // Buscar la lista de precios por IdListaOK y FechaReg
+export const putPromocion = async (IdListaOK, idPromocion, promocionData) => {
+    // Buscar la lista de precios por IdListaOK
     const listaPrecios = await ListaPrecios.findOne({
-        IdListaOK: IdListaOK,
-        'detail_row.detail_row_reg.FechaReg': new Date(FechaReg)
+        IdListaOK: IdListaOK
     });
 
     if (!listaPrecios) {
@@ -69,6 +52,28 @@ export const putPromocion = async (IdListaOK, FechaReg, idPromocion, promocionDa
     
     // Actualizar los campos de la promoción
     promocion.set(promocionData);
+
+    // Guardar los cambios
+    return await listaPrecios.save();
+};
+
+// Eliminar una promoción específica de una lista de precios
+export const deletePromocion = async (IdListaOK, idPromocion) => {
+    // Buscar la lista de precios por IdListaOK
+    const listaPrecios = await ListaPrecios.findOne({ IdListaOK: IdListaOK });
+
+    if (!listaPrecios) {
+        throw new Error('Lista de precios no encontrada');
+    }
+
+    // Encontrar la promoción específica por su _id
+    const promocion = listaPrecios.promociones.id(idPromocion);
+    if (!promocion) {
+        throw new Error('Promoción no encontrada');
+    }
+
+    // Eliminar la promoción del array
+    promocion.remove();
 
     // Guardar los cambios
     return await listaPrecios.save();

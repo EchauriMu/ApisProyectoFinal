@@ -4,7 +4,6 @@
 GET {{api}}/9001-000000000001/notas
 
 
-
 ### POST Crear Nota
 POST {{api}}/9001-000000000001/notas
 Content-Type: application/json
@@ -18,33 +17,6 @@ Content-Type: application/json
   "Prioridad": "Alta",
   "Estado": "En proceso"
 }
-
-
-
-### POST Crear Lista de Notas
-POST {{api}}/9001-000000000001/notas-lista
-Content-Type: application/json
-
-[
-  {
-    "_id": "2",
-    "Usuario": "Nota de ejemplo",
-    "Fecha": "2024-11-19T00:00:00Z",
-    "Comentario": "Sffffff",
-    "Categoria": "prueba",
-    "Prioridad": "Alta",
-    "Estado": "En proceso"
-  },
-  {
-    "_id": "3",
-    "Usuario": "Nota de ejemplo",
-    "Fecha": "2024-11-19T00:00:00Z",
-    "Comentario": "Sffffff",
-    "Categoria": "prueba",
-    "Prioridad": "Baja",
-    "Estado": "En proceso"
-  }
-]
 
 
 ### PUT Actualizar Nota
@@ -62,3 +34,5 @@ Content-Type: application/json
 }
 
 
+### DELETE (borrar) Notas
+DELETE  {{api}}/9001-000000000001/notas/6
