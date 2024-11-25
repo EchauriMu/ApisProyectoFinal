@@ -16,6 +16,27 @@ exports.getAllPrecios = async (req, res, next) => {
 };
 
 
+// Función para obtener toda la información de la lista de precios por IdListaOK
+exports.getListaPreciosByIdListaOK = async (req, res, next) => {
+  const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL
+
+  try {
+    // Llamamos al servicio para obtener toda la información de la lista de precios
+    const listaPrecio = await precioService.getListaPreciosByIdListaOK(idListaOK);
+    
+    if (!listaPrecio) {
+      // Si no se encuentra la lista, devolvemos un error 404
+      throw boom.notFound('No se encontró la lista de precios con el IdListaOK proporcionado.');
+    }
+    
+    // Si se encuentra la lista de precios, la enviamos en la respuesta
+    res.status(200).json(listaPrecio);
+  } catch (error) {
+    // Pasamos cualquier error al middleware de manejo de errores
+    next(error);
+  }
+};
+
 // Función para obtener los precios por IdListaOK
 exports.getPreciosByIdListaOK = async (req, res, next) => {
   const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL
@@ -37,6 +58,24 @@ exports.getPreciosByIdListaOK = async (req, res, next) => {
   }
 };
 
+
+// NUEVO: Función para crear una nueva lista de precios
+exports.createListaPrecios = async (req, res, next) => {
+  try {
+    const datosLista = req.body; // Los datos de la lista de precios vienen en el cuerpo de la solicitud
+
+    // Llamamos al servicio para crear la nueva lista de precios
+    const resultado = await precioService.createListaPrecios(datosLista);
+
+    // Si todo sale bien, respondemos con un mensaje de éxito
+    res.status(201).json({
+      message: 'Lista de precios creada correctamente.',
+      result: resultado,
+    });
+  } catch (error) {
+    next(error); // Pasa cualquier error al middleware de manejo de errores
+  }
+};
 
 
 //api para deletr la lista completa seleccionada
@@ -63,20 +102,3 @@ exports.deleteListaPrecios = async (req, res, next) => {
 
 
 
-// NUEVO: Función para crear una nueva lista de precios
-exports.createListaPrecios = async (req, res, next) => {
-  try {
-    const datosLista = req.body; // Los datos de la lista de precios vienen en el cuerpo de la solicitud
-
-    // Llamamos al servicio para crear la nueva lista de precios
-    const resultado = await precioService.createListaPrecios(datosLista);
-
-    // Si todo sale bien, respondemos con un mensaje de éxito
-    res.status(201).json({
-      message: 'Lista de precios creada correctamente.',
-      result: resultado,
-    });
-  } catch (error) {
-    next(error); // Pasa cualquier error al middleware de manejo de errores
-  }
-};

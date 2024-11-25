@@ -24,8 +24,37 @@ export const getAllPrecios = async () => {
   }
 };
 
+// Función para obtener toda la información de la lista de precios por IdListaOK
+export const getListaPreciosByIdListaOK = async (idListaOK) => {
+  try {
+    // Buscamos el documento en la colección "Precios" donde IdListaOK coincida
+    const listaPrecio = await Precios.findOne({ 'IdListaOK': idListaOK }, {
+      IdInstitutoOK: 1,
+      IdListaOK: 1,
+      IdListaBK: 1,
+      DesLista: 1,
+      FechaExpiraIni: 1,
+      FechaExpiraFin: 1,
+      IdTipoListaOK: 1,
+      IdTipoGeneraListaOK: 1,
+      IdTipoFormulaOK: 1,
+      
+    });
 
-// Función para obtener los precios por IdListaOK
+    // Verificamos si se encontró la lista de precios
+    if (!listaPrecio) {
+      throw new Error('Lista de precios no encontrada.');
+    }
+
+    // Retornamos toda la información de la lista de precios
+    return listaPrecio;
+  } catch (error) {
+    throw new Error('Error al obtener la lista de precios: ' + error.message);
+  }
+};
+
+
+// Función para obtener la lista precios por IdListaOK
 export const getPreciosByIdListaOK = async (idListaOK) => {
   try {
     // Buscamos el documento en la colección "cat_precios" donde IdListaOK coincida
@@ -47,18 +76,6 @@ export const getPreciosByIdListaOK = async (idListaOK) => {
 
 
 
-// Servicio para eliminar una lista de precios por idListaOK
-export const deleteListaPrecios = async (idListaOK) => {
-  try {
-    // Usamos el modelo para buscar y eliminar la lista
-    const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
-
-    return result; // Retornamos el resultado (o null si no se encontró)
-  } catch (error) {
-    throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
-  }
-};
-
 
 // Función para crear una nueva lista de precios
 export const createListaPrecios = async (datosLista) => {
@@ -72,5 +89,18 @@ export const createListaPrecios = async (datosLista) => {
     return nuevaLista; // Devolvemos la lista de precios recién creada
   } catch (error) {
     throw new Error('Error al crear la lista de precios: ' + error.message);
+  }
+};
+
+
+// Servicio para eliminar una lista de precios por idListaOK
+export const deleteListaPrecios = async (idListaOK) => {
+  try {
+    // Usamos el modelo para buscar y eliminar la lista
+    const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
+
+    return result; // Retornamos el resultado (o null si no se encontró)
+  } catch (error) {
+    throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
   }
 };

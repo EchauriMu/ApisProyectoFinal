@@ -6,6 +6,10 @@ const router = Router();
 // Ruta para obtener todos los precios
 router.get('/', precioController.getAllPrecios);
 
+// Ruta para obtener toda la información de la lista de precios por IdListaOK
+router.get('/lista/:idListaOK', precioController.getListaPreciosByIdListaOK);
+
+
 // Ruta para obtener los precios por IdListaOK
 router.get('/:idListaOK', precioController.getPreciosByIdListaOK);
 
