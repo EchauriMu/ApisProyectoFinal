@@ -16,6 +16,37 @@ exports.getAllPrecios = async (req, res, next) => {
 };
 
 
+// Controlador para actualizar una lista de precios
+exports.updateListaPrecios = async (req, res) => {
+  try {
+    const { idListaOK } = req.params; // Obtenemos el identificador desde la URL
+    const { desLista, fechaExpiraIni, fechaExpiraFin } = req.body; // Obtenemos los campos desde el cuerpo de la solicitud
+
+    // Validación de entrada
+    if (!desLista || !fechaExpiraIni || !fechaExpiraFin) {
+      return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+    }
+
+    // Llamamos al servicio para actualizar los datos
+    const updatedLista = await precioService.updateListaPrecios(
+      idListaOK,
+      desLista,
+      fechaExpiraIni,
+      fechaExpiraFin
+    );
+
+    if (!updatedLista) {
+      return res.status(404).json({ message: 'Lista de precios no encontrada.' });
+    }
+
+    return res.status(200).json(updatedLista);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al actualizar la lista de precios.', error: error.message });
+  }
+};
+
+
+
 // Función para obtener toda la información de la lista de precios por IdListaOK
 exports.getListaPreciosByIdListaOK = async (req, res, next) => {
   const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL

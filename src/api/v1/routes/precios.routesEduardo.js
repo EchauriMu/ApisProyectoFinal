@@ -21,5 +21,8 @@ router.delete('/:idListaOK', precioController.deleteListaPrecios);
 // Ruta para crear lista de precios
 router.post('/crear', precioController.createListaPrecios);
 
+// Ruta para actualizar una lista de precios
+router.put('/:idListaOK', precioController.updateListaPrecios);
+
 
 module.exports = router;

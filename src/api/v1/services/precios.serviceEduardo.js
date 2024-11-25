@@ -53,6 +53,22 @@ export const getListaPreciosByIdListaOK = async (idListaOK) => {
   }
 };
 
+// Servicio para actualizar una lista de precios
+export const updateListaPrecios = async (idListaOK, desLista, fechaExpiraIni, fechaExpiraFin) => {
+  try {
+    // Buscamos y actualizamos la lista de precios
+    const updatedLista = await Precios.findOneAndUpdate(
+      { IdListaOK: idListaOK }, // Filtro por ID
+      { DesLista: desLista, FechaExpiraIni: fechaExpiraIni, FechaExpiraFin: fechaExpiraFin }, // Campos a actualizar
+      { new: true } // Retornar el documento actualizado
+    );
+
+    return updatedLista; // Retornamos el documento actualizado
+  } catch (error) {
+    throw new Error('Error en el servicio al actualizar la lista de precios: ' + error.message);
+  }
+};
+
 
 // Función para obtener la lista precios por IdListaOK
 export const getPreciosByIdListaOK = async (idListaOK) => {
