@@ -17,45 +17,17 @@ exports.getAllPrecios = async (req, res, next) => {
 
 exports.updateListaPrecios = async (req, res) => {
   try {
-    const { idListaOK } = req.params; // ID del documento a actualizar
-    const { 
-      desLista, 
-      fechaExpiraIni, 
-      fechaExpiraFin, 
-      detail_row, // Nuevo estado de 'detail_row'
-      detail_row_reg // Nuevo registro para agregar a 'detail_row_reg'
-    } = req.body; // Nuevos valores desde el cuerpo
-
-    // Validar los campos básicos
-    if (!desLista || !fechaExpiraIni || !fechaExpiraFin) {
-      return res.status(400).json({ message: 'Los campos básicos son obligatorios.' });
-    }
-
-    // Validar si se envía detail_row
-    if (detail_row && (!detail_row.Activo || !detail_row.Borrado)) {
-      return res.status(400).json({ message: 'El campo detail_row requiere los valores Activo y Borrado.' });
-    }
-
-    // Validar si se envía detail_row_reg
-    if (detail_row_reg && !Array.isArray(detail_row_reg)) {
-      return res.status(400).json({ message: 'El campo detail_row_reg debe ser un array de registros.' });
-    }
+    const { idListaOK } = req.params;
+    const { desLista, fechaExpiraIni, fechaExpiraFin, detail_row, detail_row_reg } = req.body;
 
     // Construir el objeto de actualización
     const updateFields = {
       DesLista: desLista,
       FechaExpiraIni: fechaExpiraIni,
       FechaExpiraFin: fechaExpiraFin,
+      ...(detail_row && { "detail_row.Activo": detail_row.Activo, "detail_row.Borrado": detail_row.Borrado }),
+      ...(detail_row_reg && { "detail_row.detail_row_reg": detail_row_reg })
     };
-
-    if (detail_row) {
-      updateFields["detail_row.Activo"] = detail_row.Activo;
-      updateFields["detail_row.Borrado"] = detail_row.Borrado;
-    }
-
-    if (detail_row_reg && detail_row_reg.length > 0) {
-      updateFields["detail_row.detail_row_reg"] = detail_row_reg; // Añadir los nuevos registros
-    }
 
     // Llamar al servicio para actualizar
     const updatedLista = await precioService.updateListaPrecios(idListaOK, updateFields);
