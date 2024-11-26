@@ -1,4 +1,4 @@
-const cat_precios = require('../models/Precios'); // Asegúrate de la ruta correcta
+const cat_precios = require('../models/Precios');
 
 // Obtener promociones por IdListaOK
 exports.getPromociones = async (req, res) => {
@@ -20,33 +20,11 @@ exports.getPromociones = async (req, res) => {
   }
 };
 
-// Obtener promociones por IdListaOK y FechaReg
-exports.getPromocionesFecha = async (req, res) => {
-  try {
-    const { id } = req.params; // IdListaOK
-    const { FechaReg } = req.query; // Recibimos FechaReg como parámetro opcional en el query
-
-    // Buscamos la lista de precios por IdListaOK
-    const listaPrecio = await cat_precios.findOne({
-      IdListaOK: id,
-      'detail_row.detail_row_reg.FechaReg': new Date(FechaReg) // Filtramos también por FechaReg
-    });
-
-    if (!listaPrecio) {
-      return res.status(404).send({ message: 'Lista de precios no encontrada' });
-    }
-
-    res.status(200).send(listaPrecio.promociones);
-  } catch (error) {
-    res.status(500).send({ message: 'Error interno del servidor', error });
-  }
-};
-
 // Crear una nueva promoción por IdListaOK
 exports.postPromocion = async (req, res) => {
   try {
     const { id } = req.params; // IdListaOK
-    const { tipo, descuento, condicion } = req.body;
+    const { tipo, descuento, condicion, usuario } = req.body;
 
     // Buscamos la lista de precios por IdListaOK
     const listaPrecio = await cat_precios.findOne({ IdListaOK: id });
@@ -68,7 +46,7 @@ exports.postPromocion = async (req, res) => {
       tipo,
       descuento,
       condicion,
-      detail_row_reg: [{ FechaReg: new Date(), UsuarioReg: 'Sistema' }]
+      detail_row_reg: [{ FechaReg: new Date(), UsuarioReg: usuario }]
     };
 
     listaPrecio.promociones.push(nuevaPromocion);
@@ -83,7 +61,7 @@ exports.postPromocion = async (req, res) => {
 exports.putPromocion = async (req, res) => {
   try {
     const { id, idPromocion } = req.params; // IdListaOK y id de la promoción
-    const { tipo, descuento, condicion } = req.body;
+    const { Activo, tipo, descuento, condicion } = req.body;
 
     // Buscamos la lista de precios por IdListaOK
     const listaPrecio = await cat_precios.findOne({ IdListaOK: id });
@@ -98,12 +76,43 @@ exports.putPromocion = async (req, res) => {
     }
 
     // Actualizamos los campos de la promoción
+    promocion.Activo = Activo || promocion.Activo;
     promocion.tipo = tipo || promocion.tipo;
     promocion.descuento = descuento || promocion.descuento;
     promocion.condicion = condicion || promocion.condicion;
 
+    // Guardamos los cambios
     await listaPrecio.save();
-    res.status(200).send(promocion);
+
+    res.status(200).send({
+      message: 'Promoción actualizada exitosamente',
+      promocion,
+    });
+  } catch (error) {
+    res.status(500).send({ message: 'Error interno del servidor', error });
+  }
+};
+
+
+// Eliminar una promoción específica por IdListaOK y idPromocion
+exports.deletePromocion = async (req, res) => {
+  try {
+    const { id, idPromocion } = req.params; // IdListaOK y id de la promoción
+
+    // Usamos el servicio para eliminar la promoción
+    const listaActualizada = await cat_precios.findOneAndUpdate(
+      { IdListaOK: id },
+      { $pull: { promociones: { _id: idPromocion } } },
+      { new: true }
+    );
+
+    if (!listaActualizada) {
+      return res.status(404).send({ message: 'Lista de precios o promoción no encontrada' });
+    }
+
+    res.status(200).send({
+      message: 'Promoción eliminada exitosamente',
+    });
   } catch (error) {
     res.status(500).send({ message: 'Error interno del servidor', error });
   }

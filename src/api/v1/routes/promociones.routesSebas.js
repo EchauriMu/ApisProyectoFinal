@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/:id/promociones', promocionesController.getPromociones); // GET usando IdListaOK
 router.post('/:id/promociones', promocionesController.postPromocion); // POST usando IdListaOK
 router.put('/:id/promociones/:idPromocion', promocionesController.putPromocion); // PUT usando IdListaOK y id de la promoción
-
+router.delete('/:id/promociones/:idPromocion', promocionesController.deletePromocion); // DELETE usando IdListaOK y id de la promoción
 
 module.exports = router;

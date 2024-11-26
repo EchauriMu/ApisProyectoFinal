@@ -16,6 +16,58 @@ exports.getAllPrecios = async (req, res, next) => {
 };
 
 
+// Controlador para actualizar una lista de precios
+exports.updateListaPrecios = async (req, res) => {
+  try {
+    const { idListaOK } = req.params; // Obtenemos el identificador desde la URL
+    const { desLista, fechaExpiraIni, fechaExpiraFin } = req.body; // Obtenemos los campos desde el cuerpo de la solicitud
+
+    // Validación de entrada
+    if (!desLista || !fechaExpiraIni || !fechaExpiraFin) {
+      return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+    }
+
+    // Llamamos al servicio para actualizar los datos
+    const updatedLista = await precioService.updateListaPrecios(
+      idListaOK,
+      desLista,
+      fechaExpiraIni,
+      fechaExpiraFin
+    );
+
+    if (!updatedLista) {
+      return res.status(404).json({ message: 'Lista de precios no encontrada.' });
+    }
+
+    return res.status(200).json(updatedLista);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al actualizar la lista de precios.', error: error.message });
+  }
+};
+
+
+
+// Función para obtener toda la información de la lista de precios por IdListaOK
+exports.getListaPreciosByIdListaOK = async (req, res, next) => {
+  const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL
+
+  try {
+    // Llamamos al servicio para obtener toda la información de la lista de precios
+    const listaPrecio = await precioService.getListaPreciosByIdListaOK(idListaOK);
+    
+    if (!listaPrecio) {
+      // Si no se encuentra la lista, devolvemos un error 404
+      throw boom.notFound('No se encontró la lista de precios con el IdListaOK proporcionado.');
+    }
+    
+    // Si se encuentra la lista de precios, la enviamos en la respuesta
+    res.status(200).json(listaPrecio);
+  } catch (error) {
+    // Pasamos cualquier error al middleware de manejo de errores
+    next(error);
+  }
+};
+
 // Función para obtener los precios por IdListaOK
 exports.getPreciosByIdListaOK = async (req, res, next) => {
   const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL
@@ -37,6 +89,24 @@ exports.getPreciosByIdListaOK = async (req, res, next) => {
   }
 };
 
+
+// NUEVO: Función para crear una nueva lista de precios
+exports.createListaPrecios = async (req, res, next) => {
+  try {
+    const datosLista = req.body; // Los datos de la lista de precios vienen en el cuerpo de la solicitud
+
+    // Llamamos al servicio para crear la nueva lista de precios
+    const resultado = await precioService.createListaPrecios(datosLista);
+
+    // Si todo sale bien, respondemos con un mensaje de éxito
+    res.status(201).json({
+      message: 'Lista de precios creada correctamente.',
+      result: resultado,
+    });
+  } catch (error) {
+    next(error); // Pasa cualquier error al middleware de manejo de errores
+  }
+};
 
 
 //api para deletr la lista completa seleccionada
@@ -63,20 +133,3 @@ exports.deleteListaPrecios = async (req, res, next) => {
 
 
 
-// NUEVO: Función para crear una nueva lista de precios
-exports.createListaPrecios = async (req, res, next) => {
-  try {
-    const datosLista = req.body; // Los datos de la lista de precios vienen en el cuerpo de la solicitud
-
-    // Llamamos al servicio para crear la nueva lista de precios
-    const resultado = await precioService.createListaPrecios(datosLista);
-
-    // Si todo sale bien, respondemos con un mensaje de éxito
-    res.status(201).json({
-      message: 'Lista de precios creada correctamente.',
-      result: resultado,
-    });
-  } catch (error) {
-    next(error); // Pasa cualquier error al middleware de manejo de errores
-  }
-};

@@ -29,21 +29,6 @@ export const postNotaItem = async (id, nuevaNota) => {
     }
 };
 
-export const postNotasList = async (id, notasList) => {
-    try {
-        const listaPrecios = await Precios.findOne({ IdListaOK: id });
-        if (!listaPrecios) {
-            throw boom.notFound('Lista de precios no encontrada');
-        }
-
-        listaPrecios.notas.push(...notasList);
-        await listaPrecios.save();
-
-        return notasList;
-    } catch (error) {
-        throw boom.internal(error);
-    }
-};
 
 export const putNotaItem = async (id, notaId, notaData) => {
     try {
@@ -62,6 +47,25 @@ export const putNotaItem = async (id, notaId, notaData) => {
 
         return listaPrecios.notas[notaIndex];
     } catch (error) {
+        throw boom.internal(error);
+    }
+};
+
+export const eliminarNota = async (idLista, idNota) => {
+    try {
+        const listaActualizada = await Precios.findOneAndUpdate(
+            { IdListaOK: idLista }, // Filtra por IdListaOK
+            { $pull: { notas: { _id: idNota } } }, // Elimina la nota específica
+            { new: true } // Devuelve la lista actualizada
+        );
+
+        if (!listaActualizada) {
+            throw boom.notFound('Lista de precios o nota no encontrada');
+        }
+
+        return listaActualizada;
+    } catch (error) {
+        console.error('Error al eliminar la nota:', error);
         throw boom.internal(error);
     }
 };

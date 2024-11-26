@@ -6,9 +6,9 @@ const router = Router();
 router.get('/:id/notas', notasController.getNotas);
 //POST NOTA ITEM
 router.post('/:id/notas', notasController.postNotaItem);
-//POST NOTAS LISTA
-router.post('/:id/notas-lista', notasController.postNotasList);
 //PUT NOTA ITEM
 router.put('/:id/notas/:notaId', notasController.putNotaItem);
+// DELETE NOTA ITEM
+router.delete('/:id/notas/:idNota', notasController.eliminarNota);
 
 export default router;
