@@ -15,7 +15,8 @@ export const getAllPrecios = async () => {
       FechaExpiraFin: 1,
       IdTipoListaOK: 1,
       IdTipoGeneraListaOK: 1,
-      IdTipoFormulaOK: 1
+      IdTipoFormulaOK: 1,
+      detail_row:1
     });
 
     return precios;
@@ -24,50 +25,23 @@ export const getAllPrecios = async () => {
   }
 };
 
-// Función para obtener toda la información de la lista de precios por IdListaOK
-export const getListaPreciosByIdListaOK = async (idListaOK) => {
+exports.updateListaPrecios = async (idListaOK, updateFields) => {
   try {
-    // Buscamos el documento en la colección "Precios" donde IdListaOK coincida
-    const listaPrecio = await Precios.findOne({ 'IdListaOK': idListaOK }, {
-      IdInstitutoOK: 1,
-      IdListaOK: 1,
-      IdListaBK: 1,
-      DesLista: 1,
-      FechaExpiraIni: 1,
-      FechaExpiraFin: 1,
-      IdTipoListaOK: 1,
-      IdTipoGeneraListaOK: 1,
-      IdTipoFormulaOK: 1,
-      
-    });
-
-    // Verificamos si se encontró la lista de precios
-    if (!listaPrecio) {
-      throw new Error('Lista de precios no encontrada.');
-    }
-
-    // Retornamos toda la información de la lista de precios
-    return listaPrecio;
-  } catch (error) {
-    throw new Error('Error al obtener la lista de precios: ' + error.message);
-  }
-};
-
-// Servicio para actualizar una lista de precios
-export const updateListaPrecios = async (idListaOK, desLista, fechaExpiraIni, fechaExpiraFin) => {
-  try {
-    // Buscamos y actualizamos la lista de precios
+    // Actualizamos el documento principal con los nuevos campos proporcionados
     const updatedLista = await Precios.findOneAndUpdate(
       { IdListaOK: idListaOK }, // Filtro por ID
-      { DesLista: desLista, FechaExpiraIni: fechaExpiraIni, FechaExpiraFin: fechaExpiraFin }, // Campos a actualizar
+      { 
+        $set: updateFields // Actualización de los campos especificados
+      },
       { new: true } // Retornar el documento actualizado
     );
 
     return updatedLista; // Retornamos el documento actualizado
   } catch (error) {
-    throw new Error('Error en el servicio al actualizar la lista de precios: ' + error.message);
+    throw new Error('Error al actualizar la lista de precios: ' + error.message);
   }
 };
+
 
 
 // Función para obtener la lista precios por IdListaOK

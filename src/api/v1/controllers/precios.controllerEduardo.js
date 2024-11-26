@@ -15,35 +15,61 @@ exports.getAllPrecios = async (req, res, next) => {
   }
 };
 
-
-// Controlador para actualizar una lista de precios
 exports.updateListaPrecios = async (req, res) => {
   try {
-    const { idListaOK } = req.params; // Obtenemos el identificador desde la URL
-    const { desLista, fechaExpiraIni, fechaExpiraFin } = req.body; // Obtenemos los campos desde el cuerpo de la solicitud
+    const { idListaOK } = req.params; // ID del documento a actualizar
+    const { 
+      desLista, 
+      fechaExpiraIni, 
+      fechaExpiraFin, 
+      detail_row, // Nuevo estado de 'detail_row'
+      detail_row_reg // Nuevo registro para agregar a 'detail_row_reg'
+    } = req.body; // Nuevos valores desde el cuerpo
 
-    // Validación de entrada
+    // Validar los campos básicos
     if (!desLista || !fechaExpiraIni || !fechaExpiraFin) {
-      return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+      return res.status(400).json({ message: 'Los campos básicos son obligatorios.' });
     }
 
-    // Llamamos al servicio para actualizar los datos
-    const updatedLista = await precioService.updateListaPrecios(
-      idListaOK,
-      desLista,
-      fechaExpiraIni,
-      fechaExpiraFin
-    );
+    // Validar si se envía detail_row
+    if (detail_row && (!detail_row.Activo || !detail_row.Borrado)) {
+      return res.status(400).json({ message: 'El campo detail_row requiere los valores Activo y Borrado.' });
+    }
+
+    // Validar si se envía detail_row_reg
+    if (detail_row_reg && !Array.isArray(detail_row_reg)) {
+      return res.status(400).json({ message: 'El campo detail_row_reg debe ser un array de registros.' });
+    }
+
+    // Construir el objeto de actualización
+    const updateFields = {
+      DesLista: desLista,
+      FechaExpiraIni: fechaExpiraIni,
+      FechaExpiraFin: fechaExpiraFin,
+    };
+
+    if (detail_row) {
+      updateFields["detail_row.Activo"] = detail_row.Activo;
+      updateFields["detail_row.Borrado"] = detail_row.Borrado;
+    }
+
+    if (detail_row_reg && detail_row_reg.length > 0) {
+      updateFields["detail_row.detail_row_reg"] = detail_row_reg; // Añadir los nuevos registros
+    }
+
+    // Llamar al servicio para actualizar
+    const updatedLista = await precioService.updateListaPrecios(idListaOK, updateFields);
 
     if (!updatedLista) {
-      return res.status(404).json({ message: 'Lista de precios no encontrada.' });
+      return res.status(404).json({ message: `No se encontró la lista de precios con idListaOK: ${idListaOK}` });
     }
 
-    return res.status(200).json(updatedLista);
+    res.status(200).json(updatedLista);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al actualizar la lista de precios.', error: error.message });
+    res.status(500).json({ message: 'Error al actualizar la lista de precios.', error: error.message });
   }
 };
+
 
 
 // Función para obtener toda la información de la lista de precios por IdListaOK
