@@ -117,7 +117,7 @@ export const getHistorialByIdProdServ = async (IdProdServOK, IdPresentaOK) => {
       // Guardar los cambios en la base de datos
       await listaPrecios.save();
   
-      return historialItem; // Retorna el historial actualizado
+      return newEntry; // Retorna el historial actualizado
     } catch (error) {
       throw boom.internal(error);
     }
