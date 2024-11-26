@@ -46,7 +46,6 @@ exports.updateListaPrecios = async (req, res) => {
 };
 
 
-
 // Función para obtener toda la información de la lista de precios por IdListaOK
 exports.getListaPreciosByIdListaOK = async (req, res, next) => {
   const { idListaOK } = req.params; // Obtenemos el IdListaOK desde los parámetros de la URL
