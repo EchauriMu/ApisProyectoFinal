@@ -22,6 +22,7 @@ exports.postPrecio = async (req, res, next) => {
   exports.putPrecio = async (req, res, next) => {
     try {
       const listaPrecioId = req.params.idListaOK;
+      const IdPresentaOK = req.params.IdPresentaOK;
       const precioData = req.body; // Los datos de la lista de precios vienen en el cuerpo de la solicitud
   
       // Llamamos al servicio para crear la nueva lista de precios
