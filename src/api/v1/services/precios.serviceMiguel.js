@@ -1,4 +1,3 @@
-import Precios from '../models/Precios';
 
 // services/precio.service.js
 const Precio = require('../models/Precios'); // Asegúrate de que el modelo esté correcto
@@ -20,10 +19,6 @@ export const postPrecio = async (listaPrecioId, precioData) => {
     if (precioIndex >= 0) {
         // Actualizar precio existente //error
         throw new Error(`Se intenta insertar un precio ya existente: ${precioData.IdPresentaOK}`);
-        // listaPrecio.precios[precioIndex] = { 
-        //     ...listaPrecio.precios[precioIndex], 
-        //     ...precioData 
-        // };
     } else {
         // Agregar nuevo precio
         listaPrecio.precios.push(precioData);
@@ -121,35 +116,6 @@ export const putPrecio = async (listaPrecioId, precioData) => {
     return listaPrecio;
 };
 
-// export const putPrecio = async (listaPrecioId, precioData) => {
-//     // Buscar la lista de precios por ID
-//     const listaPrecio = await Precio.findOne({ IdListaOK: listaPrecioId });
-
-//     if (!listaPrecio) {
-//         throw new Error(`No se encontró la lista de precios con IdListaOK: ${listaPrecioId}`);
-//     }
-
-//     // Encontrar el índice del precio a actualizar (si existe)
-//     const index = listaPrecio.precios.findIndex(
-//         (precio) => precio.IdPresentaOK === precioData.IdPresentaOK
-//     );
-
-//     if (index >= 0) {
-//         // Actualizar el precio existente //error
-//         listaPrecio.precios[index] = { 
-//             ...listaPrecio.precios[index], 
-//             ...precioData 
-//         };
-//     } else {
-//         // Agregar un nuevo precio
-//         throw new Error(`Se intenta insertar un precio que no existe: ${precioData.IdPresentaOK}`);
-//     }
-
-//     // Guardar los cambios en la base de datos
-//     await listaPrecio.save();
-
-//     return listaPrecio;
-// };
 
 export const deletePrecio = async (listaPrecioId, IdPresentaOK) => {
     // Buscar la lista de precios por ID

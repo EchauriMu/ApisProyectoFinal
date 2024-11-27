@@ -3,22 +3,23 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { mongoose } from './config/database.config';
 
-//MALR: imports Swagger
-//MALR: imports Routes
+//: imports Swagger
+//Edu.v: imports Routes
 import routeAPI from './api/v1/routes/index';
-//MALR: imports Middlewares
-//MALR: Config para variables de entorno
+//m
 import config from './config/config';
-//MALR: Declaramos la constante app igualandola a express
+
 const app = express();
-//MALR: Settings
+
 app.set('port', config.PORT);
-//MALR: Middlewares generales
+// Middlewares generales
 app.use(cors());
 app.use(morgan('dev'));
+
+//por esto acepta jsons xdd
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//MALR: Routes
+// Routes
 // Routes
 routeAPI(app);
 const api = config.API_URL;

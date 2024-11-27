@@ -1,0 +1,38 @@
+@api = http://localhost:3020/api/v1/listas-precios
+
+### GET Notas
+GET {{api}}/9001-000000000001/notas
+
+
+### POST Crear Nota
+POST {{api}}/9001-000000000001/notas
+Content-Type: application/json
+
+{
+  "_id": 1,
+  "Usuario": "Nota de ejemplo",
+  "Fecha": "2024-11-19T00:00:00Z",
+  "Comentario": "Sffffff",
+  "Categoria": "prueba",
+  "Prioridad": "Alta",
+  "Estado": "En proceso"
+}
+
+
+### PUT Actualizar Nota
+PUT {{api}}/9001-000000000001/notas/4
+Content-Type: application/json
+
+{
+  "_id": "3",
+  "Usuario": "Nota actulizada",
+  "Fecha": "2024-11-19T00:00:00Z",
+  "Comentario": "Sffffff",
+  "Categoria": "prueba",
+  "Prioridad": "Alta",
+  "Estado": "En proceso"
+}
+
+
+### DELETE (borrar) Notas
+DELETE  {{api}}/9001-000000000001/notas/6

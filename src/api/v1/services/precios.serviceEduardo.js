@@ -1,6 +1,6 @@
 import Precios from '../models/Precios';
 
-// services/precio.service.js
+// services/precio.serviceEdu.js
 const Precio = require('../models/Precios'); // Asegúrate de que el modelo esté correcto
 
 export const getAllPrecios = async () => {
@@ -15,7 +15,8 @@ export const getAllPrecios = async () => {
       FechaExpiraFin: 1,
       IdTipoListaOK: 1,
       IdTipoGeneraListaOK: 1,
-      IdTipoFormulaOK: 1
+      IdTipoFormulaOK: 1,
+      detail_row:1
     });
 
     return precios;
@@ -24,8 +25,26 @@ export const getAllPrecios = async () => {
   }
 };
 
+exports.updateListaPrecios = async (idListaOK, updateFields) => {
+  try {
+    // Actualizamos el documento principal con los nuevos campos proporcionados
+    const updatedLista = await Precios.findOneAndUpdate(
+      { IdListaOK: idListaOK }, // Filtro por ID
+      { 
+        $set: updateFields // Actualización de los campos especificados
+      },
+      { new: true } // Retornar el documento actualizado
+    );
 
-// Función para obtener los precios por IdListaOK
+    return updatedLista; // Retornamos el documento actualizado
+  } catch (error) {
+    throw new Error('Error al actualizar la lista de precios: ' + error.message);
+  }
+};
+
+
+
+// Función para obtener la lista precios por IdListaOK
 export const getPreciosByIdListaOK = async (idListaOK) => {
   try {
     // Buscamos el documento en la colección "cat_precios" donde IdListaOK coincida
@@ -47,18 +66,6 @@ export const getPreciosByIdListaOK = async (idListaOK) => {
 
 
 
-// Servicio para eliminar una lista de precios por idListaOK
-export const deleteListaPrecios = async (idListaOK) => {
-  try {
-    // Usamos el modelo para buscar y eliminar la lista
-    const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
-
-    return result; // Retornamos el resultado (o null si no se encontró)
-  } catch (error) {
-    throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
-  }
-};
-
 
 // Función para crear una nueva lista de precios
 export const createListaPrecios = async (datosLista) => {
@@ -72,5 +79,18 @@ export const createListaPrecios = async (datosLista) => {
     return nuevaLista; // Devolvemos la lista de precios recién creada
   } catch (error) {
     throw new Error('Error al crear la lista de precios: ' + error.message);
+  }
+};
+
+
+// Servicio para eliminar una lista de precios por idListaOK
+export const deleteListaPrecios = async (idListaOK) => {
+  try {
+    // Usamos el modelo para buscar y eliminar la lista
+    const result = await Precio.findOneAndDelete({ IdListaOK: idListaOK });
+
+    return result; // Retornamos el resultado (o null si no se encontró)
+  } catch (error) {
+    throw new Error(`Error al eliminar la lista de precios: ${error.message}`);
   }
 };
