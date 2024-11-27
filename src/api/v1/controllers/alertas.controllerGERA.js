@@ -12,10 +12,10 @@ export const getAlertas = async (req, res, next) => {
 };
 
 export const postAlertaItem = async (req, res, next) => {
-  const { id } = req.params;
-  const nuevaAlerta = req.body;
-
   try {
+    const { id } = req.params;
+    const nuevaAlerta = req.body;
+
     const alertaCreada = await preciosServices.postAlertaItem(id, nuevaAlerta);
     res.status(201).json(alertaCreada);
   } catch (error) {

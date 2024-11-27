@@ -15,10 +15,18 @@ export const getAlertas = async (id) => {
 
 export const postAlertaItem = async (id, nuevaAlerta) => {
   try {
-    const listaPrecios = await Precios.findOne({ IdListaOK: id });
+    const listaPrecios = await Precios.findOne({ IdListaOK: id.trim() }); // Limpiar directamente aquí
     if (!listaPrecios) {
       throw boom.notFound('Lista de precios no encontrada');
     }
+
+    // Obtener el ID máximo de las alertas existentes
+    const alertas = listaPrecios.alertas || [];
+    const maxId = alertas.length > 0
+      ? Math.max(...alertas.map(ale => parseInt(ale._id) || 0))
+      : 0;
+
+    nuevaAlerta._id = (maxId + 1).toString();
     listaPrecios.alertas.push(nuevaAlerta);
 
     await listaPrecios.save();
@@ -47,7 +55,7 @@ export const postAlertasList = async (id, alertasList) => {
 
 export const putAlertasItem = async (id, alertaId, alertaData) => {
   try {
-    const listaPrecios = await Precios.findOne({ IdListaOK: id });
+    const listaPrecios = await Precios.findOne({ IdListaOK: id.trim() });
     if (!listaPrecios) {
       throw boom.notFound('Lista de precios no encontrada');
     }

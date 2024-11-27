@@ -8,7 +8,6 @@ POST {{api}}/9001-000000000001/alertas
 Content-Type: application/json
 
 {
-  "_id": "2",
   "Activo": "S",
   "Borrado": "N",
   "fecha": "2024-12-02T00:00:00.000Z",
